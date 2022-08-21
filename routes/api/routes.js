@@ -1,21 +1,9 @@
 const express = require("express");
 const uuid = require("uuid");
 const fs = require("fs");
+const router = express.Router();
 const path = require("path");
 const notes = require("./db/db.json");
-
-const PORT = process.env.PORT || 3001;
-
-const app = express();
-
-//serving the static resources (where to take the static resources is)
-app.use(express.static("public"));
-
-//middleware
-//recognizes the incoming request objet as string or array
-app.use(express.urlencoded({ extended: true }));
-//recognizes the incoming object as a json object
-app.use(express.json());
 
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
@@ -26,7 +14,7 @@ app.get("/notes", (req, res) =>
 app.get("/api/notes", (req, res) => {
   res.json(notes);
 });
-//keeping this as reference
+//!keeping this as reference
 // app.get("/api/notes", (req, res) =>
 //   res.sendFile(path.join(__dirname, "/db/db.json"))
 // );
@@ -81,4 +69,4 @@ app.delete("/api/notes/:t_id", (req, res) => {
   res.send("Deleted successfully!");
 });
 
-app.listen(PORT, () => console.log(`Listening on PORT ${PORT}.`));
+module.exports = router;
