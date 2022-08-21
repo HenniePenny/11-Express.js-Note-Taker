@@ -1,4 +1,5 @@
 const express = require("express");
+const uuid = require("uuid");
 const fs = require("fs");
 const path = require("path");
 const notes = require("./db/db.json");
@@ -9,8 +10,6 @@ const app = express();
 
 //serving the static resources (where to take the static resources is)
 app.use(express.static("public"));
-
-// app.listen(PORT, () => console.log(""));
 
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
@@ -26,5 +25,7 @@ app.get("/api/notes", (req, res) => {
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "public/index.html"))
 );
+
+app.post("api/notes", (req, res) => {});
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}.`));
