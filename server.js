@@ -16,6 +16,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 //recognizes the incoming object as a json object
 app.use(express.json());
+app.use("""/routes/api/members");
 
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
@@ -26,7 +27,7 @@ app.get("/notes", (req, res) =>
 app.get("/api/notes", (req, res) => {
   res.json(notes);
 });
-//keeping this as reference
+//!keeping this as reference
 // app.get("/api/notes", (req, res) =>
 //   res.sendFile(path.join(__dirname, "/db/db.json"))
 // );
