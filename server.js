@@ -11,6 +11,12 @@ const app = express();
 //serving the static resources (where to take the static resources is)
 app.use(express.static("public"));
 
+//middleware
+//recognizes the incoming request objet as string or array
+app.use(express.urlencoded({ extended: true }));
+//recognizes the incoming object as a json object
+app.use(express.json());
+
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "public/notes.html"))
@@ -20,12 +26,59 @@ app.get("/notes", (req, res) =>
 app.get("/api/notes", (req, res) => {
   res.json(notes);
 });
+//!or this?
+// app.get("/api/notes", (req, res) =>
+//   res.sendFile(path.join(__dirname, "/db/db.json"))
+// );
 
 //all other routes should return the index.html file
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "public/index.html"))
 );
 
-app.post("api/notes", (req, res) => {});
+app.post("/api/notes", (req, res) => {
+  const newNote = {
+    //give unique id when it is saved
+    id: uuid.v4(),
+    title: req.body.title,
+    text: req.body.text,
+  };
+
+  if (!newNote.title || !newNote.text) {
+    return res
+      .status(400)
+      .json({ msg: "Your note must include a title and some text." });
+  }
+
+  //add to the db.json file --- write to file???
+  notes.push(newNote);
+
+  fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  //!then return the new note to the client
+
+  res.json(newNote);
+});
+
+app.delete("/api/notes/:t_id", (req, res) => {
+  // get index
+  const index = notes.findIndex((element) => {
+    return element.id === req.params.t_id;
+  });
+  if (index > -1) {
+    // only splice array when item is found
+    notes.splice(index, 1); // 2nd parameter means remove one item only
+  }
+  fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+  res.send("Deleted successfully!");
+});
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}.`));
