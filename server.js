@@ -16,7 +16,6 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 //recognizes the incoming object as a json object
 app.use(express.json());
-// app.use("""/routes/api/members");
 
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
@@ -54,15 +53,14 @@ app.post("/api/notes", (req, res) => {
   //push the newNote to the notes(i.e. db.json file)
   notes.push(newNote);
 
-  //then write th
+  //then write all notes to the correct file
   fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
     if (err) {
       console.log(err);
     }
   });
 
-  //!then return the new note to the client
-
+  //then return the new note to the client
   res.json(newNote);
 });
 
