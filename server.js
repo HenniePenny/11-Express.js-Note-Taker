@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 //recognizes the incoming object as a json object
 app.use(express.json());
-app.use("""/routes/api/members");
+// app.use("""/routes/api/members");
 
 //whenever I navigate localhost/3001/notes
 app.get("/notes", (req, res) =>
@@ -51,9 +51,10 @@ app.post("/api/notes", (req, res) => {
       .json({ msg: "Your note must include a title and some text." });
   }
 
-  //add to the db.json file --- write to file???
+  //push the newNote to the notes(i.e. db.json file)
   notes.push(newNote);
 
+  //then write th
   fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
     if (err) {
       console.log(err);
@@ -72,7 +73,7 @@ app.delete("/api/notes/:t_id", (req, res) => {
   });
   if (index > -1) {
     // only splice array when item is found
-    notes.splice(index, 1); // 2nd parameter means remove one item only
+    notes.splice(index, 1); // only remove one item at the index
   }
   fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
     if (err) {
